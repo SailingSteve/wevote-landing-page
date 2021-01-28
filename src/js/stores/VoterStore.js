@@ -1,15 +1,8 @@
 import { ReduceStore } from 'flux/utils';
-import AppStore from './AppStore'; // eslint-disable-line import/no-cycle
-import BallotActions from '../actions/BallotActions';
 import cookies from '../utils/cookies';
 import Dispatcher from '../dispatcher/Dispatcher';
-import FacebookActions from '../actions/FacebookActions'; // eslint-disable-line import/no-cycle
-import FriendActions from '../actions/FriendActions'; // eslint-disable-line import/no-cycle
-import OrganizationActions from '../actions/OrganizationActions';
 import { stringContains } from '../utils/textFormat';
-import VoterActions from '../actions/VoterActions'; // eslint-disable-line import/no-cycle
-import VoterGuideActions from '../actions/VoterGuideActions';
-import signInModalGlobalState from '../components/Widgets/signInModalGlobalState';
+// import signInModalGlobalState from '../components/Widgets/signInModalGlobalState';
 
 class VoterStore extends ReduceStore {
   getInitialState () {
@@ -345,16 +338,16 @@ class VoterStore extends ReduceStore {
     let address;
     let currentVoterDeviceId;
     // const delayBeforeApiCall = 3000;
-    let externalVoterId;
+    // let externalVoterId;
     let googleCivicElectionId;
     let incomingVoter;
     let incorrectSecretCodeEntered;
-    let membershipOrganizationWeVoteId;
+    // let membershipOrganizationWeVoteId;
     let numberOfTriesRemaining;
     let revisedState;
     let secretCodeVerified;
     let voterDeviceId;
-    let voterExternalIdHasBeenSavedOnce;
+    // let voterExternalIdHasBeenSavedOnce;
     let voterMustRequestNewCode;
     let voterSecretCodeRequestsLocked;
 
@@ -377,37 +370,37 @@ class VoterStore extends ReduceStore {
       case 'clearSMSPhoneNumberStatus':
         // console.log('VoterStore clearSMSPhoneNumberStatus');
         return { ...state, smsPhoneNumberStatus: {} };
-      case 'organizationSave':
-        // console.log('VoterStore organizationSave');
-        // If an organization saves, we want to check to see if it is tied to this voter. If so,
-        // refresh the voter data so we have the value linked_organization_we_vote_id in the voter object.
-        if (action.res.success) {
-          if (action.res.facebook_id === state.voter.facebook_id) {
-            VoterActions.voterRetrieve();
-          } else {
-            const organizationTwitterHandle = action.res.organization_twitter_handle || '';
-            const twitterScreenName = state.voter.twitter_screen_name !== undefined ? state.voter.twitter_screen_name : '';
-            if (organizationTwitterHandle && organizationTwitterHandle.toLowerCase() === twitterScreenName.toLowerCase()) {
-              VoterActions.voterRetrieve();
-            }
-          }
-        }
-        return state;
+        // case 'organizationSave':
+        //   // console.log('VoterStore organizationSave');
+        //   // If an organization saves, we want to check to see if it is tied to this voter. If so,
+        //   // refresh the voter data so we have the value linked_organization_we_vote_id in the voter object.
+        //   if (action.res.success) {
+        //     if (action.res.facebook_id === state.voter.facebook_id) {
+        //       VoterActions.voterRetrieve();
+        //     } else {
+        //       const organizationTwitterHandle = action.res.organization_twitter_handle || '';
+        //       const twitterScreenName = state.voter.twitter_screen_name !== undefined ? state.voter.twitter_screen_name : '';
+        //       if (organizationTwitterHandle && organizationTwitterHandle.toLowerCase() === twitterScreenName.toLowerCase()) {
+        //         VoterActions.voterRetrieve();
+        //       }
+        //     }
+        //   }
+        //   return state;
 
-      case 'organizationSuggestionTasks':
-        // console.log('VoterStore organizationSuggestionTasks');
-        if (action.res.success) {
-          if (action.res.kind_of_follow_task === 'FOLLOW_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW') {
-            // console.log("organizationSuggestionTasks FOLLOW_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW");
-            // VoterGuideActions.voterGuidesToFollowRetrieve(this.electionId());
-            VoterGuideActions.voterGuidesFollowedRetrieve(this.electionId());
-          } else if (action.res.kind_of_suggestion_task === 'UPDATE_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW') {
-            // console.log("organizationSuggestionTasks UPDATE_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW");
-            // VoterGuideActions.voterGuidesToFollowRetrieve(this.electionId());
-            VoterGuideActions.voterGuidesFollowedRetrieve(this.electionId());
-          }
-        }
-        return state;
+        // case 'organizationSuggestionTasks':
+        //   // console.log('VoterStore organizationSuggestionTasks');
+        //   if (action.res.success) {
+        //     if (action.res.kind_of_follow_task === 'FOLLOW_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW') {
+        //       // console.log("organizationSuggestionTasks FOLLOW_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW");
+        //       // VoterGuideActions.voterGuidesToFollowRetrieve(this.electionId());
+        //       VoterGuideActions.voterGuidesFollowedRetrieve(this.electionId());
+        //     } else if (action.res.kind_of_suggestion_task === 'UPDATE_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW') {
+        //       // console.log("organizationSuggestionTasks UPDATE_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW");
+        //       // VoterGuideActions.voterGuidesToFollowRetrieve(this.electionId());
+        //       VoterGuideActions.voterGuidesFollowedRetrieve(this.electionId());
+        //     }
+        //   }
+        //   return state;
 
       case 'positionListForVoter':
         // console.log('VoterStore positionListForVoter');
@@ -440,42 +433,42 @@ class VoterStore extends ReduceStore {
           };
         }
 
-      case 'setExternalVoterId':
-        externalVoterId = action.payload;
-        membershipOrganizationWeVoteId = AppStore.getSiteOwnerOrganizationWeVoteId();
-        ({ voterExternalIdHasBeenSavedOnce } = state);
-        // console.log('VoterStore externalVoterId:', externalVoterId, ', membershipOrganizationWeVoteId:', membershipOrganizationWeVoteId);
-        if (externalVoterId && membershipOrganizationWeVoteId) {
-          if (!this.voterExternalIdHasBeenSavedOnce(externalVoterId, membershipOrganizationWeVoteId)) {
-            // console.log('voterExternalIdHasBeenSavedOnce has NOT been saved before.');
-            VoterActions.voterExternalIdSave(externalVoterId, membershipOrganizationWeVoteId);
-            if (!voterExternalIdHasBeenSavedOnce[externalVoterId]) {
-              voterExternalIdHasBeenSavedOnce[externalVoterId] = {};
-            }
-            voterExternalIdHasBeenSavedOnce[externalVoterId][membershipOrganizationWeVoteId] = true;
-            // AnalyticsActions.saveActionBallotVisit(VoterStore.electionId());
-          } else {
-            // console.log('voterExternalIdHasBeenSavedOnce has been saved before.');
-          }
-        }
-        return {
-          ...state,
-          externalVoterId,
-          voterExternalIdHasBeenSavedOnce,
-        };
+        // case 'setExternalVoterId':
+        //   externalVoterId = action.payload;
+        //   membershipOrganizationWeVoteId = AppStore.getSiteOwnerOrganizationWeVoteId();
+        //   ({ voterExternalIdHasBeenSavedOnce } = state);
+        //   // console.log('VoterStore externalVoterId:', externalVoterId, ', membershipOrganizationWeVoteId:', membershipOrganizationWeVoteId);
+        //   if (externalVoterId && membershipOrganizationWeVoteId) {
+        //     if (!this.voterExternalIdHasBeenSavedOnce(externalVoterId, membershipOrganizationWeVoteId)) {
+        //       // console.log('voterExternalIdHasBeenSavedOnce has NOT been saved before.');
+        //       VoterActions.voterExternalIdSave(externalVoterId, membershipOrganizationWeVoteId);
+        //       if (!voterExternalIdHasBeenSavedOnce[externalVoterId]) {
+        //         voterExternalIdHasBeenSavedOnce[externalVoterId] = {};
+        //       }
+        //       voterExternalIdHasBeenSavedOnce[externalVoterId][membershipOrganizationWeVoteId] = true;
+        //       // AnalyticsActions.saveActionBallotVisit(VoterStore.electionId());
+        //     } else {
+        //       // console.log('voterExternalIdHasBeenSavedOnce has been saved before.');
+        //     }
+        //   }
+        //   return {
+        //     ...state,
+        //     externalVoterId,
+        //     voterExternalIdHasBeenSavedOnce,
+        //   };
 
       case 'twitterRetrieveIdsIFollow':
         // console.log('VoterStore twitterRetrieveIdsIFollow');
-        if (action.res.success) {
-          VoterActions.organizationSuggestionTasks('UPDATE_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW',
-            'FOLLOW_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW');
-        }
+        // if (action.res.success) {
+        //   VoterActions.organizationSuggestionTasks('UPDATE_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW',
+        //     'FOLLOW_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW');
+        // }
 
         return state;
 
       case 'voterAnalysisForJumpProcess':
         // console.log('VoterStore, voterAnalysisForJumpProcess');
-        VoterActions.voterRetrieve();
+        // VoterActions.voterRetrieve();
         return {
           ...state,
           emailAddressStatus: {
@@ -502,11 +495,11 @@ class VoterStore extends ReduceStore {
 
       case 'voterAddressSave':
         // console.log('VoterStore, voterAddressSave, action.res:', action.res);
-        if (action.res.status === 'SIMPLE_ADDRESS_SAVE') {
-          // Don't do any other refreshing
-        } else {
-          BallotActions.voterBallotItemsRetrieve();
-        }
+        // if (action.res.status === 'SIMPLE_ADDRESS_SAVE') {
+        //   // Don't do any other refreshing
+        // } else {
+        //   BallotActions.voterBallotItemsRetrieve();
+        // }
         ({ address } = action.res);
         if (!address) {
           address = {
@@ -552,7 +545,7 @@ class VoterStore extends ReduceStore {
 
       case 'voterEmailAddressSave':
         // console.log('VoterStore, voterEmailAddressSave');
-        VoterActions.voterRetrieve();
+        // VoterActions.voterRetrieve();
         return {
           ...state,
           emailAddressList: action.res.email_address_list,
@@ -573,7 +566,7 @@ class VoterStore extends ReduceStore {
 
       case 'voterEmailAddressSignIn':
         // console.log('VoterStore, voterEmailAddressSignIn');
-        VoterActions.voterRetrieve();
+        // VoterActions.voterRetrieve();
         return {
           ...state,
           emailSignInStatus: {
@@ -589,7 +582,7 @@ class VoterStore extends ReduceStore {
 
       case 'voterEmailAddressVerify':
         // console.log('VoterStore, voterEmailAddressVerify');
-        VoterActions.voterRetrieve();
+        // VoterActions.voterRetrieve();
         return {
           ...state,
           emailAddressStatus: {
@@ -608,7 +601,7 @@ class VoterStore extends ReduceStore {
 
       case 'voterFacebookSaveToCurrentAccount':
         // console.log('VoterStore, voterFacebookSaveToCurrentAccount');
-        VoterActions.voterRetrieve();
+        // VoterActions.voterRetrieve();
         return {
           ...state,
           facebookSignInStatus: {
@@ -616,43 +609,43 @@ class VoterStore extends ReduceStore {
           },
         };
 
-      case 'voterMergeTwoAccounts':
-        // console.log('VoterStore, voterMergeTwoAccounts');
-        // On the server we just switched linked this voterDeviceId to a new voter record, so we want to
-        //  refresh a lot of data
-        VoterActions.voterRetrieve();
-        // // And set a timer for 3 seconds from now to refresh again
-        // this.timer = setTimeout(() => {
-        //   VoterActions.voterRetrieve();
-        // }, delayBeforeApiCall);
-        VoterActions.voterEmailAddressRetrieve();
-        VoterActions.voterSMSPhoneNumberRetrieve();
-        if (!signInModalGlobalState.get('textOrEmailSignInInProcess')) {
-          // Cascading actions like this causes serious problems when you have a dialog with components that change stores.
-          FriendActions.currentFriends();
-          FriendActions.friendInvitationsSentByMe();
-          FriendActions.friendInvitationsSentToMe();
-          FriendActions.friendInvitationsProcessed();
-          BallotActions.voterBallotItemsRetrieve();
-        }
-        return {
-          ...state,
-          emailSignInStatus: {
-            email_ownership_is_verified: true,
-            email_secret_key_belongs_to_this_voter: true,
-            email_sign_in_attempted: true,
-            email_address_found: true,
-            yes_please_merge_accounts: false,
-            voter_we_vote_id_from_secret_key: '',
-            voter_merge_two_accounts_attempted: true,
-          },
-          facebookSignInStatus: {
-            voter_merge_two_accounts_attempted: true,
-          },
-          twitterSignInStatus: {
-            voter_merge_two_accounts_attempted: true,
-          },
-        };
+        // case 'voterMergeTwoAccounts':
+        //   // console.log('VoterStore, voterMergeTwoAccounts');
+        //   // On the server we just switched linked this voterDeviceId to a new voter record, so we want to
+        //   //  refresh a lot of data
+        //   // VoterActions.voterRetrieve();
+        //   // // And set a timer for 3 seconds from now to refresh again
+        //   // this.timer = setTimeout(() => {
+        //   //   VoterActions.voterRetrieve();
+        //   // }, delayBeforeApiCall);
+        //   // VoterActions.voterEmailAddressRetrieve();
+        //   // VoterActions.voterSMSPhoneNumberRetrieve();
+        //   if (!signInModalGlobalState.get('textOrEmailSignInInProcess')) {
+        //     // Cascading actions like this causes serious problems when you have a dialog with components that change stores.
+        //     FriendActions.currentFriends();
+        //     FriendActions.friendInvitationsSentByMe();
+        //     FriendActions.friendInvitationsSentToMe();
+        //     FriendActions.friendInvitationsProcessed();
+        //     BallotActions.voterBallotItemsRetrieve();
+        //   }
+        //   return {
+        //     ...state,
+        //     emailSignInStatus: {
+        //       email_ownership_is_verified: true,
+        //       email_secret_key_belongs_to_this_voter: true,
+        //       email_sign_in_attempted: true,
+        //       email_address_found: true,
+        //       yes_please_merge_accounts: false,
+        //       voter_we_vote_id_from_secret_key: '',
+        //       voter_merge_two_accounts_attempted: true,
+        //     },
+        //     facebookSignInStatus: {
+        //       voter_merge_two_accounts_attempted: true,
+        //     },
+        //     twitterSignInStatus: {
+        //       voter_merge_two_accounts_attempted: true,
+        //     },
+        //   };
 
       case 'voterNotificationSettingsUpdate':
         // console.log('VoterStore, voterNotificationSettingsUpdate');
@@ -707,12 +700,12 @@ class VoterStore extends ReduceStore {
           cookies.removeItem('voter_device_id', '/', 'wevote.us');
 
           // ...and then ask for a new voter. When it returns a voter with a new voter_device_id, we will set new cookie
-          if (!cookies.getItem('voter_device_id')) {
-            // console.log("voter_device_id gone -- calling voterRetrieve");
-            VoterActions.voterRetrieve();
-          } else {
-            // console.log("voter_device_id still exists -- did not call voterRetrieve");
-          }
+          // if (!cookies.getItem('voter_device_id')) {
+          //   // console.log("voter_device_id gone -- calling voterRetrieve");
+          //   VoterActions.voterRetrieve();
+          // } else {
+          //   // console.log("voter_device_id still exists -- did not call voterRetrieve");
+          // }
         } else {
           voterDeviceId = action.res.voter_device_id;
           if (voterDeviceId) {
@@ -721,26 +714,26 @@ class VoterStore extends ReduceStore {
               this.setVoterDeviceIdCookie(voterDeviceId);
             }
 
-            VoterActions.voterAddressRetrieve(voterDeviceId);
+            // VoterActions.voterAddressRetrieve(voterDeviceId);
 
             // FriendsInvitationList.jsx is choking on this because calling this
             // results in an infinite loop cycling between voterRetrieve and getFaceProfilePicture which
             // resolves to FACEBOOK_RECEIVED_PICTURE which then attempts to save using voterFacebookSignInPhoto
             // which in turn resolves to voterFacebookSignInSave which finally attempts to call
             // voterRetrieve again
-            const url = action.res.facebook_profile_image_url_https;
+            // const url = action.res.facebook_profile_image_url_https;
             // console.log("VoterStore, voterRetrieve, action.res: ", action.res);
 
-            if (action.res.signed_in_facebook && (url === null || url === '') && facebookPhotoRetrieveLoopCount < 10) {
-              FacebookActions.getFacebookProfilePicture();
-            }
+            // if (action.res.signed_in_facebook && (url === null || url === '') && facebookPhotoRetrieveLoopCount < 10) {
+            //   FacebookActions.getFacebookProfilePicture();
+            // }
           } else {
             // console.log("voter_device_id not returned by voterRetrieve");
           }
         }
-        if (incomingVoter.linked_organization_we_vote_id) {
-          OrganizationActions.organizationRetrieve(incomingVoter.linked_organization_we_vote_id);
-        }
+        // if (incomingVoter.linked_organization_we_vote_id) {
+        //   OrganizationActions.organizationRetrieve(incomingVoter.linked_organization_we_vote_id);
+        // }
         // if (incomingVoter.signed_in_with_apple) {
         //   // Completing the logical OR that can't be conveniently made in the server, since Sign in with Apple is device_id specific
         //   incomingVoter.is_signed_in = incomingVoter.signed_in_with_apple;
@@ -760,9 +753,9 @@ class VoterStore extends ReduceStore {
 
       case 'voterSignOut':
         // console.log("VoterStore resetting voterStore via voterSignOut");
-        VoterActions.voterRetrieve();
-        VoterActions.voterEmailAddressRetrieve();
-        VoterActions.voterSMSPhoneNumberRetrieve();
+        // VoterActions.voterRetrieve();
+        // VoterActions.voterEmailAddressRetrieve();
+        // VoterActions.voterSMSPhoneNumberRetrieve();
         revisedState = state;
         revisedState = { ...revisedState, ...this.getInitialState() };
         return revisedState;
@@ -776,8 +769,8 @@ class VoterStore extends ReduceStore {
 
       case 'voterSMSPhoneNumberSave':
         // console.log('VoterStore  voterSMSPhoneNumberSave ');
-        VoterActions.voterRetrieve();
-        VoterActions.voterSMSPhoneNumberRetrieve();
+        // VoterActions.voterRetrieve();
+        // VoterActions.voterSMSPhoneNumberRetrieve();
         return {
           ...state,
           smsPhoneNumberList: action.res.sms_phone_number_list,
@@ -796,14 +789,14 @@ class VoterStore extends ReduceStore {
           },
         };
 
-      case 'voterSplitIntoTwoAccounts':
-        // console.log('VoterStore  voterSplitIntoTwoAccounts ');
-        VoterActions.voterRetrieve();
-        return state;
+        // case 'voterSplitIntoTwoAccounts':
+        //   // console.log('VoterStore  voterSplitIntoTwoAccounts ');
+        //   VoterActions.voterRetrieve();
+        //   return state;
 
       case 'voterTwitterSaveToCurrentAccount':
         // console.log('VoterStore  voterTwitterSaveToCurrentAccount ');
-        VoterActions.voterRetrieve();
+        // VoterActions.voterRetrieve();
         return {
           ...state,
           twitterSignInStatus: {
@@ -822,10 +815,10 @@ class VoterStore extends ReduceStore {
           if (notificationSettingsFlags === undefined) {
             notificationSettingsFlags = state.voter.notification_settings_flags;
           }
-          if (action.res.voter_updated && this.getLinkedOrganizationWeVoteId()) {
-            // console.log('voter_updated:', action.res.voter_updated);
-            OrganizationActions.organizationRetrieve(this.getLinkedOrganizationWeVoteId());
-          }
+          // if (action.res.voter_updated && this.getLinkedOrganizationWeVoteId()) {
+          //   // console.log('voter_updated:', action.res.voter_updated);
+          //   OrganizationActions.organizationRetrieve(this.getLinkedOrganizationWeVoteId());
+          // }
           return {
             ...state,
             voter: {
@@ -852,9 +845,9 @@ class VoterStore extends ReduceStore {
         secretCodeVerified = (action.res.secret_code_verified && action.res.secret_code_verified === true);
         voterMustRequestNewCode = (action.res.voter_must_request_new_code && action.res.voter_must_request_new_code === true);
         voterSecretCodeRequestsLocked = (action.res.secret_code_system_locked_for_this_voter_device_id && action.res.secret_code_system_locked_for_this_voter_device_id === true);
-        VoterActions.voterRetrieve();
-        VoterActions.voterEmailAddressRetrieve();
-        VoterActions.voterSMSPhoneNumberRetrieve();
+        // VoterActions.voterRetrieve();
+        // VoterActions.voterEmailAddressRetrieve();
+        // VoterActions.voterSMSPhoneNumberRetrieve();
         return {
           ...state,
           secretCodeVerificationStatus: {
@@ -870,7 +863,7 @@ class VoterStore extends ReduceStore {
         if (action.res.success) {
           // eslint-disable-next-line camelcase
           const { first_name, middle_name, last_name, email, user_code: appleUserCode } = action.res;
-          VoterActions.voterRetrieve();
+          // VoterActions.voterRetrieve();
           return {
             ...state,
             voter: {

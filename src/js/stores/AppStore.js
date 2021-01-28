@@ -1,9 +1,6 @@
 import { ReduceStore } from 'flux/utils';
 import Dispatcher from '../dispatcher/AppDispatcher';
-import VoterActions from '../actions/VoterActions'; // eslint-disable-line import/no-cycle
-import VoterStore from './VoterStore'; // eslint-disable-line import/no-cycle
-import webAppConfig from '../config'; // eslint-disable-line import/no-cycle
-import { isCordova } from '../utils/cordovaUtils'; // eslint-disable-line import/no-cycle
+// import webAppConfig from '../config'; // eslint-disable-line import/no-cycle
 import { stringContains } from '../utils/textFormat';
 
 /**
@@ -102,7 +99,7 @@ class AppStore extends ReduceStore {
   }
 
   isOnWeVoteRootUrl () {
-    return this.getState().onWeVoteRootUrl || isCordova() || stringContains('localhost:', window.location.href);
+    return this.getState().onWeVoteRootUrl || stringContains('localhost:', window.location.href);
   }
 
   isOnWeVoteSubdomainUrl () {
@@ -114,8 +111,8 @@ class AppStore extends ReduceStore {
   }
 
   voterIsAdminForThisUrl () {
-    const linkedOrganizationWeVoteId = VoterStore.getLinkedOrganizationWeVoteId();
-    return this.getState().siteOwnerOrganizationWeVoteId === linkedOrganizationWeVoteId;
+    // const linkedOrganizationWeVoteId = VoterStore.getLinkedOrganizationWeVoteId();
+    return this.getState().siteOwnerOrganizationWeVoteId === 'frogs';
   }
 
   isOnFacebookSupportedDomainUrl () {
@@ -327,10 +324,6 @@ class AppStore extends ReduceStore {
           let onFacebookSupportedDomainUrl = false;
           let onChosenFullDomainUrl = false;
 
-          if (isCordova()) {
-            hostname = webAppConfig.WE_VOTE_HOSTNAME;
-          }
-
           // console.log('siteConfigurationRetrieve hostname:', hostname);
           if (hostname === 'wevote.us' || hostname === 'quality.wevote.us' || hostname === 'localhost') {
             onWeVoteRootUrl = true;
@@ -339,17 +332,17 @@ class AppStore extends ReduceStore {
           } else {
             onChosenFullDomainUrl = true;
           }
-          if (hostname === 'wevote.us' || hostname === 'quality.wevote.us' || hostname === 'localhost' || isCordova()) {
+          if (hostname === 'wevote.us' || hostname === 'quality.wevote.us' || hostname === 'localhost') {
             // We should move this to the server if we can't change the Facebook sign in root url
             onFacebookSupportedDomainUrl = true;
           }
-          externalVoterId = VoterStore.getExternalVoterId();
+          // externalVoterId = VoterStore.getExternalVoterId();
           // console.log('AppStore externalVoterId:', externalVoterId, ', siteOwnerOrganizationWeVoteId:', siteOwnerOrganizationWeVoteId);
           ({ voterExternalIdHasBeenSavedOnce } = state);
           if (externalVoterId && siteOwnerOrganizationWeVoteId) {
             if (!this.voterExternalIdHasBeenSavedOnce(externalVoterId, siteOwnerOrganizationWeVoteId)) {
               // console.log('voterExternalIdHasBeenSavedOnce has NOT been saved before.');
-              VoterActions.voterExternalIdSave(externalVoterId, siteOwnerOrganizationWeVoteId);
+              // LP VoterActions.voterExternalIdSave(externalVoterId, siteOwnerOrganizationWeVoteId);
               if (!voterExternalIdHasBeenSavedOnce[externalVoterId]) {
                 voterExternalIdHasBeenSavedOnce[externalVoterId] = {};
               }

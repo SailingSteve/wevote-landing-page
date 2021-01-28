@@ -1,6 +1,7 @@
 import Dispatcher from '../dispatcher/Dispatcher';
-import { isCordova } from '../utils/cordovaUtils'; // eslint-disable-line import/no-cycle
-import AppStore from '../stores/AppStore'; // eslint-disable-line import/no-cycle
+
+let { hostname } = window.location;
+hostname = hostname || '';
 
 export default {
   clearEmailAddressStatus () {
@@ -42,7 +43,7 @@ export default {
     Dispatcher.loadEndpoint('voterSMSPhoneNumberSave', {
       sms_we_vote_id: smsWeVoteId,
       delete_sms: true,
-      hostname: AppStore.getHostname(),
+      hostname,
     });
   },
 
@@ -54,7 +55,7 @@ export default {
       text_for_email_address: voterEmailAddress,
       send_link_to_sign_in: true,
       make_primary_email: true,
-      hostname: AppStore.getHostname(),
+      hostname,
     });
   },
 
@@ -65,7 +66,7 @@ export default {
       text_for_email_address: voterEmailAddress,
       send_sign_in_code_email: true,
       make_primary_email: true,
-      hostname: AppStore.getHostname(),
+      hostname,
     });
   },
 
@@ -76,7 +77,7 @@ export default {
       sms_phone_number: voterSMSPhoneNumber,
       send_sign_in_code_sms: true,
       make_primary_sms_phone_number: true,
-      hostname: AppStore.getHostname(),
+      hostname,
     });
   },
 
@@ -84,7 +85,7 @@ export default {
     Dispatcher.loadEndpoint('voterEmailAddressSave', {
       email_we_vote_id: voterEmailWeVoteId,
       resend_verification_email: true,
-      hostname: AppStore.getHostname(),
+      hostname,
     });
   },
 
@@ -99,7 +100,7 @@ export default {
     Dispatcher.loadEndpoint('voterSMSPhoneNumberSave', {
       sms_we_vote_id: smsWeVoteId,
       make_primary_sms_phone_number: true,
-      hostname: AppStore.getHostname(),
+      hostname,
     });
   },
 
@@ -135,8 +136,7 @@ export default {
       text_for_email_address: voterEmailAddress,
       send_link_to_sign_in,
       make_primary_email: true,
-      is_cordova: isCordova(),
-      hostname: AppStore.getHostname(),
+      hostname,
     });
   },
 
@@ -191,7 +191,7 @@ export default {
         incoming_voter_device_id: '',
         invitation_secret_key: '',
         twitter_secret_key: '',
-        hostname: AppStore.getHostname(),
+        hostname,
       });
   },
 
@@ -204,7 +204,7 @@ export default {
         incoming_voter_device_id: '',
         invitation_secret_key: '',
         twitter_secret_key: '',
-        hostname: AppStore.getHostname(),
+        hostname,
       });
   },
 
@@ -216,7 +216,7 @@ export default {
         incoming_voter_device_id: '',
         invitation_secret_key: invitationSecretKey,
         twitter_secret_key: '',
-        hostname: AppStore.getHostname(),
+        hostname,
       });
   },
 
@@ -229,7 +229,7 @@ export default {
         incoming_voter_device_id: incomingVoterDeviceId,
         invitation_secret_key: '',
         twitter_secret_key: '',
-        hostname: AppStore.getHostname(),
+        hostname,
       });
   },
 
@@ -241,7 +241,7 @@ export default {
         incoming_voter_device_id: '',
         invitation_secret_key: '',
         twitter_secret_key: twitterSecretKey,
-        hostname: AppStore.getHostname(),
+        hostname,
       });
   },
 
@@ -265,7 +265,7 @@ export default {
     Dispatcher.loadEndpoint('voterSMSPhoneNumberSave', {
       sms_phone_number: smsPhoneNumber,
       make_primary_sms_phone_number: true,
-      hostname: AppStore.getHostname(),
+      hostname,
     });
   },
 

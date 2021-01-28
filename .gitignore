@@ -2,9 +2,7 @@
 # and https://github.com/github/gitignore/blob/master/Node.gitignore
 
 # Ignore build files
-build
-build-live
-package-lock.json
+dist
 
 # TernJS
 ###################
