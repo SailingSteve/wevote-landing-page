@@ -72,7 +72,7 @@ export default class CommentsPage extends React.Component {
           fontWeight: 'normal',
           marginBottom: 20 }}
         >
-          voterDeviceId:
+          voterDeviceId:&nbsp;&nbsp;&nbsp;
           {voterDeviceId}
         </h2>
         <h3 style={{ padding: 20 }}>(Proof that Flux and API fetching is working)</h3>

@@ -7,7 +7,7 @@
 - **Keep the "index.html" page very simple.** The only resource loaded from the home page should be the favicon.
 - **Keep the "Home" page very simple**, so that it gets to LCP (Largest Contentful Paint in (ideally) less than one second). 
 - **Keep Stores and Actions pure**.  No calls to other actions or stores from within an action or store.
-- **Lazy load all Libraries** except on the "Home" page.  Home page loaded libraries.  If a page is Lazy loaded, any imports are that page will be in the page's bundle. 
+- **Lazy load all Libraries** except on the "Home" page.  If a page is Lazy loaded, any imports from that page are that page will be in the page's bundle. 
 - **No copying code**.  Any code copied over from the WebApp should be trimmed down to the least amount of code necessary to 
 do what you wanted to, and no more. 
   - If you don't know what it does don't copy it.  Commenting out is ok in the beginning.
