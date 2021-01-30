@@ -11,7 +11,7 @@ const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 // Set isProduction to false, to enable the interactive bundle analyser and the Unused component analyzer
-const isProduction = true;   // Developers can set this to be false, but in git it should always be true
+const isProduction = false;   // Developers can set this to be false, but in git it should always be true
 
 module.exports = {
   entry: path.resolve(__dirname, './src/index.jsx'),
@@ -41,7 +41,8 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'bundle.js',
+    filename: '[name].[contenthash].js',
+    // filename: 'bundle.js',
     publicPath: '/',
   },
   plugins: [
